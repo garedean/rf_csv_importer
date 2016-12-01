@@ -21,3 +21,11 @@ After set up, you can run the application using [Heroku Local]:
 or
 
     % rails server
+
+Once the application server is running, navigate tot he following url to access the app:
+
+    http://localhost:3000/
+
+### Running Specs
+
+    bin/rspec
