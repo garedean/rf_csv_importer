@@ -15,7 +15,11 @@
 </head>
 <body class="<%= body_class %>">
   <%= render "flashes" -%>
-  <%= yield %>
+
+  <div class='centered_container'>
+    <%= yield %>
+  </div>
+
   <%= render "javascript" %>
   <%= render "css_overrides" %>
 </body>

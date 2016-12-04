@@ -1,0 +1,23 @@
+.sales {
+  h2 {
+    font-size: 1.5em;
+  }
+}
+
+.centered_container {
+  position: absolute;
+  height: 300px;
+  width: 480px;
+  top:0;left:0;right:0;bottom:0;
+  margin: auto;
+  padding: 40px;
+  background: #f1f1f1;
+
+  &--file_selection {
+    margin: 25px 0;
+  }
+
+  &--centered_container_button {
+    width: 100%;
+  }
+}
