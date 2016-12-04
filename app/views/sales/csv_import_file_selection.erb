@@ -1,5 +1,9 @@
 <h2>Import Sales from CSV</h2>
 
+<% if flash[:imported_batch_revenue] %>
+  <p>Revenue for last imported batch of sales: <%= number_to_currency(flash[:imported_batch_revenue]) %></p>
+<% end %>
+
 <p>Revenue across all imported sales: <%= number_to_currency(@revenue_for_all_sales) %></p>
 
 <%= form_tag import_sales_path, multipart: true do %>

@@ -29,15 +29,23 @@ RSpec.describe SalesController do
   describe 'POST #csv_import' do
     context 'valid CSV' do
       def stub_csv_import
-        allow(Sale).to receive(:csv_import)
+        allow(Sale).to receive(:csv_import).and_return(95.00)
       end
 
-      it 'sets the flash message' do
+      it 'sets the flash notice message' do
         stub_csv_import
 
         import_valid_csv
 
         expect(flash[:notice]).to eq 'CSV imported'
+      end
+
+      it 'sets the flash imported_batch_revenue message' do
+        stub_csv_import
+
+        import_valid_csv
+
+        expect(flash[:imported_batch_revenue]).to eq 95.00
       end
 
       it 'imports CSV data' do
