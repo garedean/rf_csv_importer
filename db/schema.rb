@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201033251) do
+ActiveRecord::Schema.define(version: 20161204003015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,4 +30,32 @@ ActiveRecord::Schema.define(version: 20161201033251) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
 
+  create_table "items", force: :cascade do |t|
+    t.string  "description"
+    t.decimal "price",       precision: 8, scale: 2
+    t.decimal "decimal",     precision: 8, scale: 2
+  end
+
+  create_table "merchants", force: :cascade do |t|
+    t.string "address"
+    t.string "name"
+  end
+
+  create_table "purchasers", force: :cascade do |t|
+    t.string "name"
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.integer "purchaser_id"
+    t.integer "item_id"
+    t.integer "merchant_id"
+    t.integer "purchase_count"
+    t.index ["item_id"], name: "index_sales_on_item_id", using: :btree
+    t.index ["merchant_id"], name: "index_sales_on_merchant_id", using: :btree
+    t.index ["purchaser_id"], name: "index_sales_on_purchaser_id", using: :btree
+  end
+
+  add_foreign_key "sales", "items"
+  add_foreign_key "sales", "merchants"
+  add_foreign_key "sales", "purchasers"
 end
