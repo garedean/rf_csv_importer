@@ -13,7 +13,7 @@ describe Sale do
       expect(Sale.first.purchase_count).to eq 2
     end
 
-    context 'saving purchaser reference' do
+    context 'saving purchaser data' do
       it "saves purchaser's name" do
         Sale.csv_import(uploaded_csv_file)
 
@@ -24,6 +24,20 @@ describe Sale do
         Sale.csv_import(uploaded_csv_file)
 
         expect(Purchaser.where(name: 'Snake Plissken').count).to eq 1
+      end
+    end
+
+    context 'saving item data'
+      it 'saves an item description' do
+        Sale.csv_import(uploaded_csv_file)
+
+        expect(Sale.first.item_description).to eq '$10 off $20 of food'
+      end
+
+      it 'saves an item price' do
+        Sale.csv_import(uploaded_csv_file)
+
+        expect(Item.where(description: '$20 Sneakers for $5').count).to eq 1
       end
     end
   end
