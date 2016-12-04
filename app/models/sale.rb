@@ -11,6 +11,8 @@ class Sale < ApplicationRecord
 
       sale.purchase_count = row['purchase count']
 
+      sale.purchaser = Purchaser.first_or_create(name: row['purchaser name'])
+
       sale.save
     end
   end

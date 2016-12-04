@@ -4,6 +4,7 @@ class SalesController < ApplicationController
 
     if csv_file
       Sale.csv_import(csv_file)
+      redirect_to root_path, notice: 'CSV imported'
     else
       redirect_to root_path, notice: 'File missing'
     end
