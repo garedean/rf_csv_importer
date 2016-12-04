@@ -27,7 +27,7 @@ describe Sale do
       end
     end
 
-    context 'saving item data'
+    context 'saving item data' do
       it 'saves an item description' do
         Sale.csv_import(uploaded_csv_file)
 
