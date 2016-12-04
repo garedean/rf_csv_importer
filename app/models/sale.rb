@@ -24,7 +24,11 @@ class Sale < ApplicationRecord
     end
 
     def revenue_for_all_sales
-      eager_load(:item).inject(0) { |total, sale| total += revenue_from_single_sale(sale) }
+      eager_load(:item).inject(0) do |total, sale|
+        # Note on rescue: if a sale is missing its 'item' foreign key, it would crash the app for all users.
+        # Unlikely, but it should be handled.
+        total += revenue_from_single_sale(sale) rescue 0
+      end
     end
 
     private
