@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Sale do
+RSpec.describe Sale do
   describe '.csv_import' do
     let(:uploaded_csv_file) {
       csv_file = File.new(Rails.root + 'spec/fixtures/sales_test_data.csv')

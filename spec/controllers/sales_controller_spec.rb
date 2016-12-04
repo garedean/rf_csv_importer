@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe SalesController, type: :controller do
+RSpec.describe SalesController do
 
 end
