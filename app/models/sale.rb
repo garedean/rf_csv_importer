@@ -1,6 +1,7 @@
 class Sale < ApplicationRecord
   belongs_to :purchaser
   belongs_to :item
+  belongs_to :merchant
 
   delegate :name,                to: :purchaser, prefix: true
   delegate :description, :price, to: :item,      prefix: true
@@ -13,6 +14,7 @@ class Sale < ApplicationRecord
       save_purchase_count(sale: sale, row: row)
       save_purchaser_data(sale: sale, row: row)
       save_item_data(sale: sale, row: row)
+      save_merchant_data(sale: sale, row: row)
 
       sale.save
     end
@@ -30,5 +32,9 @@ class Sale < ApplicationRecord
 
   def self.save_item_data(sale:, row:)
     sale.item = Item.where(description: row['item description'], price: row['item price']).first_or_create
+  end
+
+  def self.save_merchant_data(sale:, row:)
+    sale.merchant = Merchant.where(address: row['merchant address'], name: row['merchant name']).first_or_create
   end
 end
