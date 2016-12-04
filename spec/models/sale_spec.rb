@@ -34,6 +34,12 @@ describe Sale do
         expect(Sale.first.item_description).to eq '$10 off $20 of food'
       end
 
+      it 'saves an item price' do
+        Sale.csv_import(uploaded_csv_file)
+
+        expect(Sale.first.item_price).to eq 10.0
+      end
+
       it 'only saves one unique item based on description and price' do
         Sale.csv_import(uploaded_csv_file)
 
