@@ -19,8 +19,15 @@ module RfCsvImporter
       generate.request_specs false
       generate.routing_specs false
       generate.stylesheets false
-      generate.test_framework :rspec
       generate.view_specs false
+      generate.test_framework :rspec,
+        fixtures: true,
+        view_specs: false,
+        helper_specs: false,
+        routing_specs: false,
+        controller_specs: true,
+        request_specs: false
+      generate.fixture_replacement :factory_girl, dir: "spec/factories"
     end
     config.action_controller.action_on_unpermitted_parameters = :raise
     config.active_job.queue_adapter = :delayed_job
