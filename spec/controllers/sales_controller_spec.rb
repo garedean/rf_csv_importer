@@ -1,14 +1,32 @@
 require 'rails_helper'
 
 RSpec.describe SalesController do
-  describe 'POST #csv_import' do
-    def upload_csv
-      csv_fixture_path = Rails.root + 'spec/fixtures/malformed_sales_test_data.csv'
-      csv_file = fixture_file_upload(csv_fixture_path, 'text/csv')
-      
-      post :csv_import, csv_file: csv_file
-    end
+  def import_valid_csv
+    import_csv('spec/fixtures/sales_test_data.csv')
+  end
 
+  def import_invalid_csv
+    import_csv('spec/fixtures/malformed_sales_test_data.csv')
+  end
+
+  def import_csv(path)
+    csv_fixture_path = Rails.root + path
+    csv_file = fixture_file_upload(csv_fixture_path, 'text/csv')
+
+    post :csv_import, csv_file: csv_file
+  end
+
+  describe 'GET #csv_import_file_selection' do
+    it 'assigns revenue_for_all_sales' do
+      import_valid_csv
+
+      get :csv_import_file_selection
+
+      expect(assigns[:revenue_for_all_sales]).to eq 95.0
+    end
+  end
+
+  describe 'POST #csv_import' do
     context 'valid CSV' do
       def stub_csv_import
         allow(Sale).to receive(:csv_import)
@@ -17,7 +35,7 @@ RSpec.describe SalesController do
       it 'sets the flash message' do
         stub_csv_import
 
-        upload_csv
+        import_valid_csv
 
         expect(flash[:notice]).to eq 'CSV imported'
       end
@@ -25,7 +43,7 @@ RSpec.describe SalesController do
       it 'imports CSV data' do
         stub_csv_import
 
-        upload_csv
+        import_valid_csv
 
         expect(Sale).to have_received(:csv_import).with(subject.params[:csv_file])
       end
@@ -33,7 +51,7 @@ RSpec.describe SalesController do
       it 'redirects to root_path' do
         stub_csv_import
 
-        upload_csv
+        import_valid_csv
 
         expect(response).to redirect_to root_path
       end
@@ -41,7 +59,7 @@ RSpec.describe SalesController do
 
     context 'malformed CSV' do
       it 'sets the flash message' do
-        upload_csv
+        import_invalid_csv
 
         expect(flash[:notice]).to eq 'Error importing CSV. Check file formatting'
       end
@@ -49,7 +67,7 @@ RSpec.describe SalesController do
       it 'redirects to root_path' do
         allow(CSV).to receive(:foreach).and_raise(CSV::MalformedCSVError)
 
-        upload_csv
+        import_invalid_csv
 
         expect(response).to redirect_to root_path
       end

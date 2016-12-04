@@ -7,34 +7,46 @@ class Sale < ApplicationRecord
   delegate :description, :price, to: :item,      prefix: true
   delegate :address, :name,      to: :merchant,  prefix: true
 
-  def self.csv_import(file)
-    CSV.foreach(file.path, headers: true) do |row|
-      sale = new
+  class << self
+    def csv_import(file)
+      CSV.foreach(file.path, headers: true) do |row|
+        sale = new
 
-      save_purchase_count(sale: sale, row: row)
-      save_purchaser_data(sale: sale, row: row)
-      save_item_data(sale: sale, row: row)
-      save_merchant_data(sale: sale, row: row)
+        save_purchase_count(sale: sale, row: row)
+        save_purchaser_data(sale: sale, row: row)
+        save_item_data(sale: sale, row: row)
+        save_merchant_data(sale: sale, row: row)
 
-      sale.save
+        sale.save
+      end
     end
-  end
 
-  private
+    def revenue_for_all_sales
+      eager_load(:item).inject(0) do |total, sale|
+        purchase_count = sale.purchase_count
+        item_price     = sale.item_price
+        sale_total     = purchase_count * item_price
 
-  def self.save_purchase_count(sale:, row:)
-    sale.update(purchase_count: row['purchase count'])
-  end
+        total += sale_total
+      end
+    end
 
-  def self.save_purchaser_data(sale:, row:)
-    sale.purchaser = Purchaser.where(name: row['purchaser name']).first_or_create
-  end
+    private
 
-  def self.save_item_data(sale:, row:)
-    sale.item = Item.where(description: row['item description'], price: row['item price']).first_or_create
-  end
+    def save_purchase_count(sale:, row:)
+      sale.update(purchase_count: row['purchase count'])
+    end
 
-  def self.save_merchant_data(sale:, row:)
-    sale.merchant = Merchant.where(address: row['merchant address'], name: row['merchant name']).first_or_create
+    def save_purchaser_data(sale:, row:)
+      sale.purchaser = Purchaser.where(name: row['purchaser name']).first_or_create
+    end
+
+    def save_item_data(sale:, row:)
+      sale.item = Item.where(description: row['item description'], price: row['item price']).first_or_create
+    end
+
+    def save_merchant_data(sale:, row:)
+      sale.merchant = Merchant.where(address: row['merchant address'], name: row['merchant name']).first_or_create
+    end
   end
 end

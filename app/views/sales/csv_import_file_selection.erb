@@ -1,5 +1,7 @@
 <h2>Import Sales from CSV</h2>
 
+<p>Revenue across all imported sales: <%= number_to_currency(@revenue_for_all_sales) %></p>
+
 <%= form_tag import_sales_path, multipart: true do %>
   <%= file_field_tag :csv_file, accept: 'text/csv' %>
   <%= submit_tag "Import" %>
